@@ -2,6 +2,8 @@ use std::convert::TryFrom;
 use std::fmt::Display;
 use std::str::FromStr;
 
+const BIT_FIVE_MASK: u8 = 0b00100000;
+
 #[derive(Debug)]
 struct ChunkType {
     bytes: [u8; 4],
@@ -32,7 +34,7 @@ impl Display for ChunkType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "[{}, {}. {}, {}]",
+            "[{:08b}, {:08b}, {:08b}, {:08b}]",
             self.bytes[0], self.bytes[1], self.bytes[2], self.bytes[3]
         )
     }
@@ -49,6 +51,10 @@ impl Eq for ChunkType {}
 impl ChunkType {
     fn bytes(&self) -> [u8; 4] {
         self.bytes
+    }
+
+    fn is_critical(&self) -> bool {
+        self.bytes()[0] & BIT_FIVE_MASK == 0
     }
 }
 
@@ -72,18 +78,18 @@ mod tests {
         let actual = ChunkType::from_str("RuSt").unwrap();
         assert_eq!(expected, actual);
     }
-    //
-    //     #[test]
-    //     pub fn test_chunk_type_is_critical() {
-    //         let chunk = ChunkType::from_str("RuSt").unwrap();
-    //         assert!(chunk.is_critical());
-    //     }
-    //
-    //     #[test]
-    //     pub fn test_chunk_type_is_not_critical() {
-    //         let chunk = ChunkType::from_str("ruSt").unwrap();
-    //         assert!(!chunk.is_critical());
-    //     }
+
+    #[test]
+    pub fn test_chunk_type_is_critical() {
+        let chunk = ChunkType::from_str("RuSt").unwrap();
+        assert!(chunk.is_critical());
+    }
+
+    #[test]
+    pub fn test_chunk_type_is_not_critical() {
+        let chunk = ChunkType::from_str("ruSt").unwrap();
+        assert!(!chunk.is_critical());
+    }
     //
     //     #[test]
     //     pub fn test_chunk_type_is_public() {
