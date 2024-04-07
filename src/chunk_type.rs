@@ -68,6 +68,15 @@ impl ChunkType {
     fn is_safe_to_copy(&self) -> bool {
         !self.bytes()[3] & BIT_FIVE_MASK == 0
     }
+
+    fn is_valid(&self) -> bool {
+        self.is_reserved_bit_valid()
+    }
+
+    fn is_err(&self) -> bool {
+        let invalid = self.is_reserved_bit_valid();
+        !invalid
+    }
 }
 
 #[cfg(test)]
@@ -138,21 +147,21 @@ mod tests {
         let chunk = ChunkType::from_str("RuST").unwrap();
         assert!(!chunk.is_safe_to_copy());
     }
-    //
-    //     #[test]
-    //     pub fn test_valid_chunk_is_valid() {
-    //         let chunk = ChunkType::from_str("RuSt").unwrap();
-    //         assert!(chunk.is_valid());
-    //     }
-    //
-    //     #[test]
-    //     pub fn test_invalid_chunk_is_valid() {
-    //         let chunk = ChunkType::from_str("Rust").unwrap();
-    //         assert!(!chunk.is_valid());
-    //
-    //         let chunk = ChunkType::from_str("Ru1t");
-    //         assert!(chunk.is_err());
-    //     }
+
+    #[test]
+    pub fn test_valid_chunk_is_valid() {
+        let chunk = ChunkType::from_str("RuSt").unwrap();
+        assert!(chunk.is_valid());
+    }
+
+    #[test]
+    pub fn test_invalid_chunk_is_valid() {
+        let chunk = ChunkType::from_str("Rust").unwrap();
+        assert!(!chunk.is_valid());
+
+        let chunk = ChunkType::from_str("Ru1t").unwrap();
+        assert!(chunk.is_err());
+    }
     //
     //     #[test]
     //     pub fn test_chunk_type_string() {
