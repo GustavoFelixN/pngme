@@ -32,11 +32,8 @@ impl FromStr for ChunkType {
 
 impl Display for ChunkType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "[{:08b}, {:08b}, {:08b}, {:08b}]",
-            self.bytes[0], self.bytes[1], self.bytes[2], self.bytes[3]
-        )
+        let as_str: String = self.bytes().iter().map(|&byte| byte as char).collect();
+        write!(f, "{}", as_str)
     }
 }
 
@@ -162,13 +159,13 @@ mod tests {
         let chunk = ChunkType::from_str("Ru1t").unwrap();
         assert!(chunk.is_err());
     }
-    //
-    //     #[test]
-    //     pub fn test_chunk_type_string() {
-    //         let chunk = ChunkType::from_str("RuSt").unwrap();
-    //         assert_eq!(&chunk.to_string(), "RuSt");
-    //     }
-    //
+
+    #[test]
+    pub fn test_chunk_type_string() {
+        let chunk = ChunkType::from_str("RuSt").unwrap();
+        assert_eq!(&chunk.to_string(), "RuSt");
+    }
+
     //     #[test]
     //     pub fn test_chunk_type_trait_impls() {
     //         let chunk_type_1: ChunkType = TryFrom::try_from([82, 117, 83, 116]).unwrap();
