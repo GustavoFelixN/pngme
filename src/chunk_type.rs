@@ -5,7 +5,7 @@ use std::str::FromStr;
 const BIT_FIVE_MASK: u8 = 0b00100000;
 
 #[derive(Debug)]
-struct ChunkType {
+pub struct ChunkType {
     bytes: [u8; 4],
 }
 
