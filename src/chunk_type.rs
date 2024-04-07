@@ -60,6 +60,10 @@ impl ChunkType {
     fn is_public(&self) -> bool {
         self.bytes()[1] & BIT_FIVE_MASK == 0
     }
+
+    fn is_reserved_bit_valid(&self) -> bool {
+        self.bytes()[2] & BIT_FIVE_MASK == 0
+    }
 }
 
 #[cfg(test)]
@@ -106,18 +110,18 @@ mod tests {
         let chunk = ChunkType::from_str("RuSt").unwrap();
         assert!(!chunk.is_public());
     }
-    //
-    //     #[test]
-    //     pub fn test_chunk_type_is_reserved_bit_valid() {
-    //         let chunk = ChunkType::from_str("RuSt").unwrap();
-    //         assert!(chunk.is_reserved_bit_valid());
-    //     }
-    //
-    //     #[test]
-    //     pub fn test_chunk_type_is_reserved_bit_invalid() {
-    //         let chunk = ChunkType::from_str("Rust").unwrap();
-    //         assert!(!chunk.is_reserved_bit_valid());
-    //     }
+
+    #[test]
+    pub fn test_chunk_type_is_reserved_bit_valid() {
+        let chunk = ChunkType::from_str("RuSt").unwrap();
+        assert!(chunk.is_reserved_bit_valid());
+    }
+
+    #[test]
+    pub fn test_chunk_type_is_reserved_bit_invalid() {
+        let chunk = ChunkType::from_str("Rust").unwrap();
+        assert!(!chunk.is_reserved_bit_valid());
+    }
     //
     //     #[test]
     //     pub fn test_chunk_type_is_safe_to_copy() {
