@@ -26,7 +26,11 @@ impl TryFrom<&[u8]> for Chunk {
         let message_end_index = 8 + length as usize;
         let message = value[8..message_end_index].to_vec();
 
-        let crc = u32::from_be_bytes(value[message_end_index..].try_into().unwrap());
+        let crc = u32::from_be_bytes(
+            value[message_end_index..message_end_index + 4]
+                .try_into()
+                .unwrap(),
+        );
 
         let crc_iso_3309 = crc::Crc::<u32>::new(&crc::CRC_32_ISO_HDLC);
         let crc_checksum = crc_iso_3309.checksum(&value[4..message_end_index]);
