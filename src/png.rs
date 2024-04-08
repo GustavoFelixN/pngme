@@ -45,6 +45,13 @@ impl Png {
     pub fn chunks(&self) -> &Vec<Chunk> {
         &self.chunks
     }
+
+    pub fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
+        self.chunks
+            .iter()
+            .filter(|&chunk| chunk.chunk_type().to_string() == chunk_type)
+            .next()
+    }
 }
 
 #[cfg(test)]
@@ -152,14 +159,14 @@ mod tests {
         assert_eq!(chunks.len(), 3);
     }
 
-    //     #[test]
-    //     fn test_chunk_by_type() {
-    //         let png = testing_png();
-    //         let chunk = png.chunk_by_type("FrSt").unwrap();
-    //         assert_eq!(&chunk.chunk_type().to_string(), "FrSt");
-    //         assert_eq!(&chunk.data_as_string().unwrap(), "I am the first chunk");
-    //     }
-    //
+    #[test]
+    fn test_chunk_by_type() {
+        let png = testing_png();
+        let chunk = png.chunk_by_type("FrSt").unwrap();
+        assert_eq!(&chunk.chunk_type().to_string(), "FrSt");
+        assert_eq!(&chunk.data_as_string().unwrap(), "I am the first chunk");
+    }
+
     //     #[test]
     //     fn test_append_chunk() {
     //         let mut png = testing_png();
