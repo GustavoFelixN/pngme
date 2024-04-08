@@ -46,31 +46,31 @@ impl PartialEq for ChunkType {
 impl Eq for ChunkType {}
 
 impl ChunkType {
-    fn bytes(&self) -> [u8; 4] {
+    pub fn bytes(&self) -> [u8; 4] {
         self.bytes
     }
 
-    fn is_critical(&self) -> bool {
+    pub fn is_critical(&self) -> bool {
         self.bytes()[0] & BIT_FIVE_MASK == 0
     }
 
-    fn is_public(&self) -> bool {
+    pub fn is_public(&self) -> bool {
         self.bytes()[1] & BIT_FIVE_MASK == 0
     }
 
-    fn is_reserved_bit_valid(&self) -> bool {
+    pub fn is_reserved_bit_valid(&self) -> bool {
         self.bytes()[2] & BIT_FIVE_MASK == 0
     }
 
-    fn is_safe_to_copy(&self) -> bool {
+    pub fn is_safe_to_copy(&self) -> bool {
         !self.bytes()[3] & BIT_FIVE_MASK == 0
     }
 
-    fn is_valid(&self) -> bool {
+    pub fn is_valid(&self) -> bool {
         self.is_reserved_bit_valid()
     }
 
-    fn is_err(&self) -> bool {
+    pub fn is_err(&self) -> bool {
         let invalid = self.is_reserved_bit_valid();
         !invalid
     }
