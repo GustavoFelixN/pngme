@@ -67,6 +67,14 @@ impl Chunk {
     fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
+
+    fn data_as_string(&self) -> Result<String, &'static str> {
+        if self.message.len() == 0 {
+            return Err("No data to show");
+        }
+        let message_str: String = self.message.iter().map(|&byte| byte as char).collect();
+        Ok(message_str)
+    }
 }
 
 #[cfg(test)]
@@ -116,13 +124,13 @@ mod tests {
         assert_eq!(chunk.chunk_type().to_string(), String::from("RuSt"));
     }
 
-    //     #[test]
-    //     fn test_chunk_string() {
-    //         let chunk = testing_chunk();
-    //         let chunk_string = chunk.data_as_string().unwrap();
-    //         let expected_chunk_string = String::from("This is where your secret message will be!");
-    //         assert_eq!(chunk_string, expected_chunk_string);
-    //     }
+    #[test]
+    fn test_chunk_string() {
+        let chunk = testing_chunk();
+        let chunk_string = chunk.data_as_string().unwrap();
+        let expected_chunk_string = String::from("This is where your secret message will be!");
+        assert_eq!(chunk_string, expected_chunk_string);
+    }
     //
     //     #[test]
     //     fn test_chunk_crc() {
