@@ -4,7 +4,40 @@ pub struct Png {
     chunks: Vec<Chunk>,
 }
 
+impl TryFrom<&[u8]> for Png {
+    type Error = &'static str;
+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        if value.len() < 8 {
+            return Err("File too short");
+        }
+
+        let mut header = [0u8; 8];
+        header.clone_from_slice(&value[..8]);
+        if header != Self::STANDARD_HEADER {
+            return Err("Incorrect header");
+        }
+
+        let mut chunks = Vec::new();
+        let mut current_position = 8;
+        loop {
+            let length_bytes = &value[current_position..current_position + 4];
+            let length = u32::from_be_bytes(length_bytes.try_into().unwrap());
+            let chunk_size = 12 + length;
+            let end_chunk = current_position + chunk_size as usize;
+            chunks.push(Chunk::try_from(value[current_position..].as_ref()).unwrap());
+            if end_chunk >= value.len() {
+                break;
+            }
+            current_position = end_chunk;
+        }
+
+        Ok(Png { chunks })
+    }
+}
+
 impl Png {
+    const STANDARD_HEADER: [u8; 8] = [137, 80, 71, 78, 13, 10, 26, 10];
+
     pub fn from_chunks(chunks: Vec<Chunk>) -> Png {
         Png { chunks }
     }
@@ -20,7 +53,6 @@ mod tests {
     use crate::chunk::Chunk;
     use crate::chunk_type::ChunkType;
     use std::convert::TryFrom;
-    use std::str::FromStr;
 
     fn testing_chunks() -> Vec<Chunk> {
         vec![
@@ -55,24 +87,24 @@ mod tests {
         assert_eq!(png.chunks().len(), 3);
     }
 
-    //     #[test]
-    //     fn test_valid_from_bytes() {
-    //         let chunk_bytes: Vec<u8> = testing_chunks()
-    //             .into_iter()
-    //             .flat_map(|chunk| chunk.as_bytes())
-    //             .collect();
-    //
-    //         let bytes: Vec<u8> = Png::STANDARD_HEADER
-    //             .iter()
-    //             .chain(chunk_bytes.iter())
-    //             .copied()
-    //             .collect();
-    //
-    //         let png = Png::try_from(bytes.as_ref());
-    //
-    //         assert!(png.is_ok());
-    //     }
-    //
+    #[test]
+    fn test_valid_from_bytes() {
+        let chunk_bytes: Vec<u8> = testing_chunks()
+            .into_iter()
+            .flat_map(|chunk| chunk.as_bytes())
+            .collect();
+
+        let bytes: Vec<u8> = Png::STANDARD_HEADER
+            .iter()
+            .chain(chunk_bytes.iter())
+            .copied()
+            .collect();
+
+        let png = Png::try_from(bytes.as_ref());
+
+        assert!(png.is_ok());
+    }
+
     //     #[test]
     //     fn test_invalid_header() {
     //         let chunk_bytes: Vec<u8> = testing_chunks()
