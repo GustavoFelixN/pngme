@@ -131,13 +131,13 @@ mod tests {
         let expected_chunk_string = String::from("This is where your secret message will be!");
         assert_eq!(chunk_string, expected_chunk_string);
     }
-    //
-    //     #[test]
-    //     fn test_chunk_crc() {
-    //         let chunk = testing_chunk();
-    //         assert_eq!(chunk.crc(), 2882656334);
-    //     }
-    //
+
+    #[test]
+    fn test_chunk_crc() {
+        let chunk = testing_chunk();
+        assert_eq!(chunk.crc(), 2882656334);
+    }
+
     //     #[test]
     //     fn test_valid_chunk_from_bytes() {
     //         let data_length: u32 = 42;
