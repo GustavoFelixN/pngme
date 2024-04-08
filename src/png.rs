@@ -145,13 +145,13 @@ mod tests {
         assert!(png.is_err());
     }
 
-    //     #[test]
-    //     fn test_list_chunks() {
-    //         let png = testing_png();
-    //         let chunks = png.chunks();
-    //         assert_eq!(chunks.len(), 3);
-    //     }
-    //
+    #[test]
+    fn test_list_chunks() {
+        let png = testing_png();
+        let chunks = png.chunks();
+        assert_eq!(chunks.len(), 3);
+    }
+
     //     #[test]
     //     fn test_chunk_by_type() {
     //         let png = testing_png();
