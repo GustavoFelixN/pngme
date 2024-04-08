@@ -54,7 +54,7 @@ impl Display for Chunk {
 }
 
 impl Chunk {
-    fn new(chunk_type: ChunkType, data: Vec<u8>) -> Chunk {
+    pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Chunk {
         let length: u32 = data.len() as u32;
 
         let bytes: Vec<u8> = chunk_type
@@ -74,19 +74,19 @@ impl Chunk {
         }
     }
 
-    fn length(&self) -> u32 {
+    pub fn length(&self) -> u32 {
         self.length
     }
 
-    fn crc(&self) -> u32 {
+    pub fn crc(&self) -> u32 {
         self.crc
     }
 
-    fn chunk_type(&self) -> &ChunkType {
+    pub fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
 
-    fn data_as_string(&self) -> Result<String, &'static str> {
+    pub fn data_as_string(&self) -> Result<String, &'static str> {
         if self.message.len() == 0 {
             return Err("No data to show");
         }
