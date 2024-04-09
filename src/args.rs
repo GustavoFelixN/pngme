@@ -19,7 +19,7 @@ pub enum Options {
 
         #[structopt(parse(from_os_str))]
         /// Path to output file (optional)
-        output: PathBuf,
+        output: Option<PathBuf>,
     },
     Decode {
         #[structopt(parse(from_os_str))]
