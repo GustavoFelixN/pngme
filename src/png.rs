@@ -1,3 +1,5 @@
+use std::io::Read;
+
 use crate::chunk::Chunk;
 
 pub struct Png {
@@ -67,6 +69,20 @@ impl Png {
             return Ok(chunk);
         }
         Err("Chunk nao encontrado")
+    }
+
+    pub fn as_bytes(&self) -> Vec<u8> {
+        let chunk_bytes: Vec<u8> = self
+            .chunks
+            .iter()
+            .flat_map(|chunk| chunk.as_bytes())
+            .collect();
+
+        Self::STANDARD_HEADER
+            .iter()
+            .chain(chunk_bytes.iter())
+            .copied()
+            .collect()
     }
 }
 
@@ -207,14 +223,14 @@ mod tests {
         assert!(png.is_ok());
     }
 
-    //     #[test]
-    //     fn test_as_bytes() {
-    //         let png = Png::try_from(&PNG_FILE[..]).unwrap();
-    //         let actual = png.as_bytes();
-    //         let expected: Vec<u8> = PNG_FILE.to_vec();
-    //         assert_eq!(actual, expected);
-    //     }
-    //
+    #[test]
+    fn test_as_bytes() {
+        let png = Png::try_from(&PNG_FILE[..]).unwrap();
+        let actual = png.as_bytes();
+        let expected: Vec<u8> = PNG_FILE.to_vec();
+        assert_eq!(actual, expected);
+    }
+
     //     #[test]
     //     fn test_png_trait_impls() {
     //         let chunk_bytes: Vec<u8> = testing_chunks()
