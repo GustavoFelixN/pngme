@@ -56,6 +56,18 @@ impl Png {
     pub fn append_chunk(&mut self, chunk: Chunk) {
         self.chunks.push(chunk);
     }
+
+    pub fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, &'static str> {
+        if let Some(pos) = self
+            .chunks
+            .iter()
+            .position(|chunk| chunk.chunk_type().to_string() == chunk_type)
+        {
+            let chunk = self.chunks.remove(pos);
+            return Ok(chunk);
+        }
+        Err("Chunk nao encontrado")
+    }
 }
 
 #[cfg(test)]
@@ -180,15 +192,15 @@ mod tests {
         assert_eq!(&chunk.data_as_string().unwrap(), "Message");
     }
 
-    //     #[test]
-    //     fn test_remove_chunk() {
-    //         let mut png = testing_png();
-    //         png.append_chunk(chunk_from_strings("TeSt", "Message").unwrap());
-    //         png.remove_chunk("TeSt").unwrap();
-    //         let chunk = png.chunk_by_type("TeSt");
-    //         assert!(chunk.is_none());
-    //     }
-    //
+    #[test]
+    fn test_remove_chunk() {
+        let mut png = testing_png();
+        png.append_chunk(chunk_from_strings("TeSt", "Message").unwrap());
+        png.remove_chunk("TeSt").unwrap();
+        let chunk = png.chunk_by_type("TeSt");
+        assert!(chunk.is_none());
+    }
+
     //     #[test]
     //     fn test_png_from_image_file() {
     //         let png = Png::try_from(&PNG_FILE[..]);
