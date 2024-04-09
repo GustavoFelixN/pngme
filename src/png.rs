@@ -52,6 +52,10 @@ impl Png {
             .filter(|&chunk| chunk.chunk_type().to_string() == chunk_type)
             .next()
     }
+
+    pub fn append_chunk(&mut self, chunk: Chunk) {
+        self.chunks.push(chunk);
+    }
 }
 
 #[cfg(test)]
@@ -167,15 +171,15 @@ mod tests {
         assert_eq!(&chunk.data_as_string().unwrap(), "I am the first chunk");
     }
 
-    //     #[test]
-    //     fn test_append_chunk() {
-    //         let mut png = testing_png();
-    //         png.append_chunk(chunk_from_strings("TeSt", "Message").unwrap());
-    //         let chunk = png.chunk_by_type("TeSt").unwrap();
-    //         assert_eq!(&chunk.chunk_type().to_string(), "TeSt");
-    //         assert_eq!(&chunk.data_as_string().unwrap(), "Message");
-    //     }
-    //
+    #[test]
+    fn test_append_chunk() {
+        let mut png = testing_png();
+        png.append_chunk(chunk_from_strings("TeSt", "Message").unwrap());
+        let chunk = png.chunk_by_type("TeSt").unwrap();
+        assert_eq!(&chunk.chunk_type().to_string(), "TeSt");
+        assert_eq!(&chunk.data_as_string().unwrap(), "Message");
+    }
+
     //     #[test]
     //     fn test_remove_chunk() {
     //         let mut png = testing_png();
