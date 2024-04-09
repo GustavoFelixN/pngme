@@ -204,9 +204,6 @@ mod tests {
     #[test]
     fn test_png_from_image_file() {
         let png = Png::try_from(&PNG_FILE[..]);
-        if let Err(e) = png {
-            println!("{}", e);
-        }
         assert!(png.is_ok());
     }
 
