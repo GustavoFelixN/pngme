@@ -10,7 +10,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 use args::Options;
 use structopt::StructOpt;
 
-use crate::commands::{encode_message, save_to_file};
+use crate::commands::{decode_message, encode_message, save_to_file};
 
 fn main() -> Result<()> {
     let opts = Options::from_args();
@@ -31,7 +31,10 @@ fn main() -> Result<()> {
         Options::Decode {
             file_path,
             chunk_type,
-        } => {}
+        } => {
+            let message = decode_message(&file_path, chunk_type)?;
+            println!("{}", message);
+        }
         Options::Remove {
             file_path,
             chunk_type,
