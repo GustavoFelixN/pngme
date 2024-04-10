@@ -37,6 +37,13 @@ pub fn decode_message(path: &PathBuf, c_type: String) -> Result<String, Box<dyn 
     }
 }
 
+pub fn remove_chunk(path: PathBuf, c_type: String) -> Result<String, Box<dyn error::Error>> {
+    let mut file: Png = read_png(&path)?;
+    let chunk = file.remove_chunk(c_type.as_str())?;
+    save_to_file(path, file)?;
+    Ok(chunk.to_string())
+}
+
 #[cfg(test)]
 #[test]
 fn test_read_file_valid() {
