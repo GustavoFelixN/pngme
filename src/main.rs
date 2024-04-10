@@ -8,6 +8,7 @@ pub type Error = Box<dyn std::error::Error>;
 pub type Result<T> = std::result::Result<T, Error>;
 
 use args::Options;
+use commands::remove_chunk;
 use structopt::StructOpt;
 
 use crate::commands::{decode_message, encode_message, save_to_file};
@@ -38,7 +39,10 @@ fn main() -> Result<()> {
         Options::Remove {
             file_path,
             chunk_type,
-        } => {}
+        } => {
+            let message = remove_chunk(file_path, chunk_type)?;
+            println!("Message removed: {}", message);
+        }
         Options::Print { file_path } => {}
     };
     Ok(())
