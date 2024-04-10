@@ -2,8 +2,6 @@ use std::convert::TryFrom;
 use std::fmt::Display;
 use std::str::FromStr;
 
-const BIT_FIVE_MASK: u8 = 0b00100000;
-
 #[derive(Debug)]
 pub struct ChunkType {
     bytes: [u8; 4],
@@ -46,24 +44,26 @@ impl PartialEq for ChunkType {
 impl Eq for ChunkType {}
 
 impl ChunkType {
+    const BIT_FIVE_MASK: u8 = 0b00100000;
+
     pub fn bytes(&self) -> [u8; 4] {
         self.bytes
     }
 
     pub fn is_critical(&self) -> bool {
-        self.bytes()[0] & BIT_FIVE_MASK == 0
+        self.bytes()[0] & Self::BIT_FIVE_MASK == 0
     }
 
     pub fn is_public(&self) -> bool {
-        self.bytes()[1] & BIT_FIVE_MASK == 0
+        self.bytes()[1] & Self::BIT_FIVE_MASK == 0
     }
 
     pub fn is_reserved_bit_valid(&self) -> bool {
-        self.bytes()[2] & BIT_FIVE_MASK == 0
+        self.bytes()[2] & Self::BIT_FIVE_MASK == 0
     }
 
     pub fn is_safe_to_copy(&self) -> bool {
-        !self.bytes()[3] & BIT_FIVE_MASK == 0
+        !self.bytes()[3] & Self::BIT_FIVE_MASK == 0
     }
 
     pub fn is_valid(&self) -> bool {
