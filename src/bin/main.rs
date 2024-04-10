@@ -1,16 +1,10 @@
-mod args;
-mod chunk;
-mod chunk_type;
-mod commands;
-mod png;
-
 pub type Error = Box<dyn std::error::Error>;
 pub type Result<T> = std::result::Result<T, Error>;
 
-use args::Options;
+use pngme::args::Options;
 use structopt::StructOpt;
 
-use crate::commands::{decode_message, encode_message, print_file, remove_chunk, save_to_file};
+use pngme::commands::{decode_message, encode_message, print_file, remove_chunk, save_to_file};
 
 fn main() -> Result<()> {
     let opts = Options::from_args();
