@@ -44,6 +44,13 @@ pub fn remove_chunk(path: PathBuf, c_type: String) -> Result<String, Box<dyn err
     Ok(chunk.to_string())
 }
 
+pub fn print_file(path: PathBuf) -> Result<(), Box<dyn error::Error>> {
+    let file: Png = read_png(&path)?;
+    let file_str = file.to_string();
+    println!("{}", file_str);
+    Ok(())
+}
+
 #[cfg(test)]
 #[test]
 fn test_read_file_valid() {
