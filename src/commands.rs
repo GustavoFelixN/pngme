@@ -1,3 +1,4 @@
+use std::error;
 use std::{path::PathBuf, str::FromStr};
 
 use crate::{chunk::Chunk, chunk_type::ChunkType, png::Png};
@@ -17,7 +18,7 @@ pub fn encode_message(
     path: &PathBuf,
     c_type: String,
     message: String,
-) -> Result<Png, Box<dyn std::error::Error>> {
+) -> Result<Png, Box<dyn error::Error>> {
     let mut file: Png = read_png(path)?;
     let type_chunk: ChunkType = ChunkType::from_str(c_type.as_str())?;
     let new_chunk: Chunk = Chunk::new(type_chunk, message.as_bytes().to_vec());
@@ -25,6 +26,15 @@ pub fn encode_message(
     file.append_chunk(new_chunk);
 
     Ok(file)
+}
+
+pub fn decode_message(path: &PathBuf, c_type: String) -> Result<String, Box<dyn error::Error>> {
+    let file: Png = read_png(&path)?;
+    if let Some(chunk) = file.chunk_by_type(c_type.as_str()) {
+        Ok(chunk.to_string())
+    } else {
+        Err("Chunk not found".into())
+    }
 }
 
 #[cfg(test)]
