@@ -7,6 +7,36 @@ mod png;
 pub type Error = Box<dyn std::error::Error>;
 pub type Result<T> = std::result::Result<T, Error>;
 
+use args::Options;
+use structopt::StructOpt;
+
+use crate::commands::{encode_message, save_to_file};
+
 fn main() -> Result<()> {
-    todo!()
+    let opts = Options::from_args();
+    match opts {
+        Options::Encode {
+            file_path,
+            chunk_type,
+            message,
+            output,
+        } => {
+            let encoded_png = encode_message(&file_path, chunk_type, message)?;
+            if let Some(output_path) = output {
+                save_to_file(output_path, encoded_png)?;
+            } else {
+                save_to_file(file_path, encoded_png)?;
+            }
+        }
+        Options::Decode {
+            file_path,
+            chunk_type,
+        } => {}
+        Options::Remove {
+            file_path,
+            chunk_type,
+        } => {}
+        Options::Print { file_path } => {}
+    };
+    Ok(())
 }
