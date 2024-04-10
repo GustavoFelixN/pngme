@@ -18,7 +18,7 @@ impl FromStr for ChunkType {
     type Err = &'static str;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.len() != 4 {
-            Err("String com tamanho incorreto")
+            Err("Tipo com tamanho incorreto (deve conter quatro caracteres)")
         } else {
             let str_bytes = s.as_bytes();
             let mut array: [u8; 4] = [0; 4];

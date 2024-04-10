@@ -10,13 +10,13 @@ impl TryFrom<&[u8]> for Png {
     type Error = &'static str;
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
         if value.len() < 8 {
-            return Err("File too short");
+            return Err("Arquivo muito pequeno");
         }
 
         let mut header = [0u8; 8];
         header.clone_from_slice(&value[..8]);
         if header != Self::STANDARD_HEADER {
-            return Err("Incorrect header");
+            return Err("Cabecalho incorreto");
         }
 
         let mut chunks = Vec::new();

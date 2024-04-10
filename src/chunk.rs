@@ -14,7 +14,7 @@ impl TryFrom<&[u8]> for Chunk {
     type Error = &'static str;
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
         if value.len() < 12 {
-            return Err("Not enough bytes to form a Chunk");
+            return Err("Bytes insuficientes para criar um chunk");
         }
 
         let length = u32::from_be_bytes(value[..4].try_into().unwrap());
@@ -36,7 +36,7 @@ impl TryFrom<&[u8]> for Chunk {
         let crc_checksum = crc_iso_3309.checksum(&value[4..message_end_index]);
 
         if crc != crc_checksum {
-            return Err("Checksum incorrect");
+            return Err("Checksum incorreta");
         }
 
         Ok(Chunk {
@@ -92,7 +92,7 @@ impl Chunk {
 
     pub fn data_as_string(&self) -> Result<String, &'static str> {
         if self.message.len() == 0 {
-            return Err("No data to show");
+            return Err("Sem dados para mostrar.");
         }
         let message_str: String = self.message.iter().map(|&byte| byte as char).collect();
         Ok(message_str)

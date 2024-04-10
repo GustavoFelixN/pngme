@@ -33,7 +33,7 @@ pub fn decode_message(path: &PathBuf, c_type: String) -> Result<String, Box<dyn 
     if let Some(chunk) = file.chunk_by_type(c_type.as_str()) {
         Ok(chunk.to_string())
     } else {
-        Err("Chunk not found".into())
+        Err("Nenhuma mensagem encotrada".into())
     }
 }
 
